@@ -67,13 +67,13 @@ goldbachList' n = let ps = primesR 2 (n `div` 2)
                   gblHelper ps n
 
 goldbachList'' :: Int -> [(Int, (Int, Int))]
-goldbachList'' n = [(e, pair) | e <- filter (\x -> x `mod` 2 == 0) [3..n], pair <- goldbachList' e]
+goldbachList'' n = [(e, pair) | e <- filter even [3..n], pair <- goldbachList' e]
 
 goldbachListLim :: Int -> Int -> [String]
 goldbachListLim n lim = [(show e) ++ " = " ++ (show p1) ++ " + " ++ (show p2)|(e, (p1, p2)) <- goldbachList'' n, p1  > lim && p2 > lim]
 
 goldbachList1 :: Int -> Int -> [(Int, Int)]
-goldbachList1 a b = map goldbach . filter ((== 0). (`mod` 2)) $ [a..b]
+goldbachList1 a b = map goldbach . filter even $ [a..b]
 
 -- Problem 41
 -- Returns the list of numbers whose Goldbach compositions' primes are above 50
