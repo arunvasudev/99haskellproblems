@@ -25,8 +25,8 @@ pow n k = n*(pow n (k - 1))
 
 -- left justifies the string representation of a given object
 -- so that the total length of the resulting string is n
-justifyShow :: (Show a) => a -> Int -> String
-justifyShow a n = let str = show a
+justifyShow :: (Show a) => Int -> a -> String
+justifyShow n a = let str = show a
                       len = length str
                       rem = if (len > n) then 0 else (n - len) in
                    str ++ (replicate rem ' ')

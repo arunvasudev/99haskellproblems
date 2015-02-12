@@ -33,8 +33,8 @@ boolN n = let subList = boolN (n - 1) in
           (map (True:) subList) ++ (map (False:) subList)
 
 tablen :: Int -> ([Bool] -> Bool) -> [String]
-tablen n f = let rowFn bools = concat . map ((++ "  ") . (\b -> justifyShow b 6)) $ bools in
-             [(rowFn bs) ++ (justifyShow (f bs) 6) | bs <- boolN n]
+tablen n f = let rowFn bools = concat . map ((++ "  ") . (justifyShow 6)) $ bools in
+             [(rowFn bs) ++ (justifyShow 6 (f bs)) | bs <- boolN n]
 
 tablenPrint :: Int -> ([Bool] -> Bool) -> IO ()
 tablenPrint n f = putStr . unlines $ (tablen n f)
