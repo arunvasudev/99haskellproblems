@@ -2,6 +2,7 @@ module Util (
         pack
     ,   encode
     ,   pow
+    ,   justifyShow
     ) where
 
 -- packs consecutive duplicate elements of a list into sublists
@@ -21,3 +22,12 @@ pow :: Int -> Int -> Int
 pow 0 _ = 0
 pow n 0 = 1
 pow n k = n*(pow n (k - 1))
+
+-- left justifies the string representation of a given object
+-- so that the total length of the resulting string is n
+justifyShow :: (Show a) => a -> Int -> String
+justifyShow a n = let str = show a
+                      len = length str
+                      rem = if (len > n) then 0 else (n - len) in
+                   str ++ (replicate rem ' ')
+
