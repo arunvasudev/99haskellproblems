@@ -25,4 +25,4 @@ huffman syms = let initNodes = sort . map (\(c, f) -> (Leaf c f)) $ syms
                                                           rightCodes = [(c, '1':code) | (c, code) <- encode r] in
                                                        leftCodes ++ rightCodes
                    codeComparer (c1, code1) (c2, code2) = (length code1, code1) `compare` (length code2, code2)
-                   in sortBy codeComparer. encode . head . combine $ initNodes  
+                   in sortBy codeComparer . encode . head . combine $ initNodes  
