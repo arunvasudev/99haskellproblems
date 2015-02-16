@@ -17,3 +17,23 @@ cBalancedTree n a
                       subTs1 = cBalancedTree subN1 a 
                       subTs2 = cBalancedTree subN2 a in
                    concat [[Branch a t1 t2, Branch a t2 t1] | t1 <- subTs1, t2 <- subTs2]
+
+-- returns a left-right flipped over tree
+flipTree :: Tree a -> Tree a
+flipTree tree = case tree of
+                    Empty -> Empty
+                    (Branch v t1 t2) -> Branch v (flipTree t2) (flipTree t1)
+
+-- returns true if the two trees have the same structure
+areIsomorphic :: Tree a -> Tree a -> Bool
+areIsomorphic t1 t2 = case (t1, t2) of
+                        (Empty, Empty) -> True
+                        (Branch v1 t1 t2, Branch v2 s1 s2)  -> areIsomorphic t1 s1 && areIsomorphic t2 s2
+                        otherwise -> False
+
+-- problem 56
+-- returns true if the given tree is symmetric about a line through its root
+-- node
+isSymmetric :: Tree a -> Bool
+isSymmetric t = let t' = flipTree t in
+                areIsomorphic t t'
