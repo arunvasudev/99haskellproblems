@@ -69,4 +69,21 @@ hBalancedTrees h v = let subTrees' = hBalancedTrees (h - 1) v
                          nextGenEql = [Branch v t1 t2 | t1 <- subTrees', t2 <- subTrees'] in
                      nextGenEql ++ nextGenUneql
                      
-                         
+-- problem 60
+-- Construct height balanced binary trees with a given number of nodes
+
+-- Given a height h, what is the minimum number of nodes it can have if it's to
+-- be height balanced? N(h) = 1 + N(h - 1) + N(h - 2)
+minHBalancedNodeCount :: Int -> Int
+minHBalancedNodeCount h = fst $ foldl (\(a, b) _ -> (b, 1 + a + b)) (0, 1) [1..h]
+
+-- generates a series of (height, minHBalancedNodecounts for height)
+minHBalancedNodeCounts :: [(Int, Int)]
+minHBalancedNodeCounts = let helper h a b = (h, a):(helper (h + 1) b (1 + a + b))
+                         in helper 0 0 1
+
+-- given a number of nodes N, what's the maximum height a height balanced tree
+-- can have?
+maxHBalancedHeight :: Int -> Int
+maxHBalancedHeight n = let (h, n') = head .dropWhile (\(h, n') -> n' < n) $ minHBalancedNodeCounts in
+                       if (n' == n) then h else (h - 1)
