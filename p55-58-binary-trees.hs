@@ -56,3 +56,17 @@ treeFromList xs = foldl (\accum v-> add accum v) Empty xs
 -- generate all completely balanced trees with a given number of nodes
 symCBalancedTrees :: Int -> a -> [Tree a]
 symCBalancedTrees n v = filter isSymmetric (cBalancedTrees n v)
+
+-- problem 59
+-- generate all the height balanced trees of a given height
+hBalancedTrees :: Int -> a -> [Tree a]
+hBalancedTrees 0 v = [Empty]
+hBalancedTrees 1 v = [Branch v Empty Empty]
+hBalancedTrees h v = let subTrees' = hBalancedTrees (h - 1) v
+                         subTrees'' = hBalancedTrees (h - 2) v
+                         nextGenUneql = concat [[Branch v t1 t2, Branch v t2 t1] | 
+                                                    t1 <- subTrees', t2 <- subTrees'']
+                         nextGenEql = [Branch v t1 t2 | t1 <- subTrees', t2 <- subTrees'] in
+                     nextGenEql ++ nextGenUneql
+                     
+                         
