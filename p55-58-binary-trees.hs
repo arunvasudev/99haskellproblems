@@ -37,3 +37,17 @@ areIsomorphic t1 t2 = case (t1, t2) of
 isSymmetric :: Tree a -> Bool
 isSymmetric t = let t' = flipTree t in
                 areIsomorphic t t'
+
+-- problem 57
+-- adds a value to a binary search tree
+add :: (Ord a) => Tree a -> a -> Tree a
+add Empty a = Branch a Empty Empty
+add node@(Branch v t1 t2) a 
+    | a < v = Branch v (add t1 a) t2
+    | a > v = Branch v t1 (add t2 a)
+    | otherwise = node
+
+-- problem 57 (contd)
+-- creates a tree from a list of items
+treeFromList :: (Ord a) => [a] -> Tree a
+treeFromList xs = foldl (\accum v-> add accum v) Empty xs
