@@ -87,3 +87,20 @@ minHBalancedNodeCounts = let helper h a b = (h, a):(helper (h + 1) b (1 + a + b)
 maxHBalancedHeight :: Int -> Int
 maxHBalancedHeight n = let (h, n') = head .dropWhile (\(h, n') -> n' < n) $ minHBalancedNodeCounts in
                        if (n' == n) then h else (h - 1)
+
+minHBalancedHeight :: Int -> Int
+minHBalancedHeight n 
+        | n <= 0 = 0
+        | otherwise = floor (log(fromIntegral $ n + 1)/log(2.0))
+
+-- returns the number of nodes in a given tree
+nodeCount :: Tree a -> Int
+nodeCount Empty = 0
+nodeCount (Branch v t1 t2) = 1 + (nodeCount t1) + (nodeCount t2)
+
+-- returns all the height balanced trees with the given number of nodes
+-- very inefficient implementation!
+hBalancedTreeNodes :: Int -> a -> [Tree a]
+hBalancedTreeNodes n v = let minHeight = minHBalancedHeight n
+                             maxHeight = maxHBalancedHeight n in
+                         [t | h <- [minHeight..maxHeight], t <- filter ((== n) . nodeCount) $ hBalancedTrees h v] 
