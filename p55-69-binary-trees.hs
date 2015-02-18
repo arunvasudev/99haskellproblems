@@ -111,3 +111,10 @@ leafCount :: Tree a -> Int
 leafCount Empty = 0
 leafCount (Branch v Empty Empty) = 1
 leafCount (Branch v left right) = (leafCount left) + (leafCount right)
+
+-- problem 61A
+-- collect the leaves of a tree into a list
+leavesToList :: Tree a -> [a]
+leavesToList Empty = []
+leavesToList (Branch v Empty Empty) = [v]
+leavesToList (Branch v left right) = (leavesToList left) ++ (leavesToList right)
