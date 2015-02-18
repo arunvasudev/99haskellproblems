@@ -141,3 +141,27 @@ completeBinaryTree n v = let helperFun currIndx
                                         | currIndx > n = Empty
                                         | otherwise = Branch v (helperFun (2*currIndx)) (helperFun (2*currIndx + 1)) in
                          helperFun 1
+
+data Layout a = B a (Int, Int) deriving (Show)
+
+-- wrong implementation for problem 64
+-- will keep anyway
+doLayoutA :: Tree a -> [Layout a]
+doLayoutA t = doLayoutA' 1 [(t, 1)]
+
+doLayoutA' :: Int -> [(Tree a, Int)] -> [Layout a]
+doLayoutA' _ [] = []
+doLayoutA' indx (n:ns) = case n of (Empty, _) -> doLayoutA' indx ns
+                                   (Branch v left right, d) -> (B v (indx, d)):(doLayoutA' (indx + 1) (ns ++ [(left, d+1), (right, d+1)]))
+
+-- problem 64
+-- layout nodes using (inorderIndex, depth) scheme
+doLayoutB :: Tree a -> [Layout a]
+doLayoutB t = doLayoutB' 1 1 t
+
+doLayoutB' :: Int -> Int -> Tree a -> [Layout a]
+doLayoutB' _ _ Empty = []
+doLayoutB' ord depth (Branch v left right) = let leftLayout = doLayoutB' ord (depth + 1) left
+                                                 leftCount = length leftLayout
+                                                 rightLayout = doLayoutB' (ord + leftCount + 1) (depth + 1) right in
+                                              leftLayout ++ [B v (ord + leftCount, depth)] ++ rightLayout
