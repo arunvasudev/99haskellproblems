@@ -118,3 +118,10 @@ leavesToList :: Tree a -> [a]
 leavesToList Empty = []
 leavesToList (Branch v Empty Empty) = [v]
 leavesToList (Branch v left right) = (leavesToList left) ++ (leavesToList right)
+
+-- problem 62
+-- collect the internal nodes of a tree to a list
+internalsToList :: Tree a -> [a]
+internalsToList Empty = []
+internalsToList (Branch v Empty Empty) = []
+internalsToList (Branch v left right) = (internalsToList left) ++ [v] ++ (internalsToList right)
