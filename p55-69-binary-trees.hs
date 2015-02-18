@@ -104,3 +104,10 @@ hBalancedTreeNodes :: Int -> a -> [Tree a]
 hBalancedTreeNodes n v = let minHeight = minHBalancedHeight n
                              maxHeight = maxHBalancedHeight n in
                          [t | h <- [minHeight..maxHeight], t <- filter ((== n) . nodeCount) $ hBalancedTrees h v] 
+
+-- problem 61
+-- returns the number of leaves in the tree
+leafCount :: Tree a -> Int
+leafCount Empty = 0
+leafCount (Branch v Empty Empty) = 1
+leafCount (Branch v left right) = (leafCount left) + (leafCount right)
