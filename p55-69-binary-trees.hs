@@ -125,3 +125,10 @@ internalsToList :: Tree a -> [a]
 internalsToList Empty = []
 internalsToList (Branch v Empty Empty) = []
 internalsToList (Branch v left right) = (internalsToList left) ++ [v] ++ (internalsToList right)
+
+-- problem 62b
+-- collect the nodes of a binary tree at a given level into a list
+atLevel :: Tree a -> Int -> [a]
+atLevel Empty _ = []
+atLevel (Branch v _ _) 1 = [v]
+atLevel (Branch _ left right) n = (atLevel left (n-1)) ++ (atLevel right (n - 1))
