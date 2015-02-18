@@ -132,3 +132,12 @@ atLevel :: Tree a -> Int -> [a]
 atLevel Empty _ = []
 atLevel (Branch v _ _) 1 = [v]
 atLevel (Branch _ left right) n = (atLevel left (n-1)) ++ (atLevel right (n - 1))
+
+-- problem 63
+-- constructs a complete binary tree with a given number of nodes
+completeBinaryTree :: Int -> a -> Tree a
+completeBinaryTree 0 _ = Empty
+completeBinaryTree n v = let helperFun currIndx
+                                        | currIndx > n = Empty
+                                        | otherwise = Branch v (helperFun (2*currIndx)) (helperFun (2*currIndx + 1)) in
+                         helperFun 1
