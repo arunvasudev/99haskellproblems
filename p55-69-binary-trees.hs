@@ -165,3 +165,33 @@ doLayoutB' ord depth (Branch v left right) = let leftLayout = doLayoutB' ord (de
                                                  leftCount = length leftLayout
                                                  rightLayout = doLayoutB' (ord + leftCount + 1) (depth + 1) right in
                                               leftLayout ++ [B v (ord + leftCount, depth)] ++ rightLayout
+
+depthOf :: Tree a -> Int
+depthOf Empty = 0
+depthOf (Branch a Empty Empty) = 0
+depthOf (Branch a t1 t2) = 1 + (max (depthOf t1) (depthOf t2))
+
+doLayoutC' :: Tree a -> Int -> Int -> Int -> (Int, Int) -> [Layout a]
+doLayoutC' tree sep currD maxD (parX, parY) = let p = maxD - currD - 1
+                                                  childSep = 2^p in
+                                                      case tree of
+                                                        Empty -> []
+                                                        (Branch a t1 t2) -> 
+                                                            let parX' = parX + sep
+                                                                parY' = parY + 1
+                                                                chD = currD + 1
+                                                                currLayout = B a (parX', parY')
+                                                                leftL = doLayoutC' t1 (-childSep) chD maxD (parX', parY')
+                                                                rightL = doLayoutC' t2 childSep chD maxD (parX', parY') in
+                                                             currLayout:(leftL ++ rightL)
+
+doLayoutC :: Tree a -> [Layout a]
+doLayoutC tree = let maxD = depthOf tree
+                     ls = doLayoutC' tree 0 0 maxD (0, 0)
+                     minX ls' = case ls' of 
+                                    [] -> (2^32)::Int
+                                    ((B a (x,y)):ls'') -> min x (minX ls'')
+                     shiftX ls' dx = case ls' of
+                                        [] -> []
+                                        ((B a (x, y)):ls'') -> (B a (x+dx, y)):(shiftX ls'' dx) in
+                     shiftX ls (1 - (minX ls))
