@@ -43,8 +43,42 @@ bottomUp :: Tree Char -> String
 bottomUp (Node c xs) = (concat [bottomUp t | t <- xs]) ++ [c]
 
 -- P73A - get the lispy string representation from a multiway tree
-toLispyString :: Tree Char -> [Char]
-toLispyString tree = 
+toLispy :: Tree Char -> [Char]
+toLispy tree = 
     case tree of
         Node c [] -> [c]
-        Node c xs -> '(':c:' ':(concat (intersperse " " [toLispyString t | t <- xs])) ++ ")"
+        Node c xs -> '(':c:' ':(concat (intersperse " " [toLispy t | t <- xs])) ++ ")"
+
+-- P73B - convert a lispy string to a multiway tree
+fromLispy' :: [Char] -> (Maybe (Tree Char), [Char])
+fromLispy' [] = (Nothing, [])
+fromLispy' (c:cs) = 
+    case c of
+        '(' -> case cs of
+                [] -> error "Expected tokens after '(', but found none"
+                (c':cs') -> 
+                    case c' of
+                        ')' -> error "Expected character after '(', but found ')'"
+                        _ -> let (children, cs'') = fromLispyLoop cs'
+                             in (Just (Node c' children), cs'')
+        ')' -> (Nothing, cs)
+        _ -> (Just (Node c []), cs)
+
+fromLispyLoop :: [Char] -> ([Tree Char], [Char])
+fromLispyLoop cs = 
+    let (nextTree, cs') = fromLispy' cs in
+       case nextTree of
+           Nothing -> ([], cs')
+           Just t -> 
+                let (ts, cs'') = fromLispyLoop cs' in
+                (t:ts, cs'')
+
+fromLispy ::[Char] -> Tree Char
+fromLispy cs =
+    let cs' = filter (\x -> x /= ' ') cs
+        (m, cs'') = fromLispy' cs' in
+    case cs'' of
+        [] -> case m of
+                Nothing -> error "Parse failure - couldn't get a tree"
+                Just t -> t
+        _ -> error "Failed to parse the input lispy string"
