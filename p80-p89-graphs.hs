@@ -57,3 +57,19 @@ toGraph nodes edges =
                         let ls = M.findWithDefault [] s acc in
                             M.insert s (e:ls) acc) m edges
     in m1
+
+-- P81C
+-- Returns all the acyclic paths from nodes start to end in a graph
+paths' :: (Ord a) => a -> a -> [a] -> M.Map a [a] -> [[a]]
+paths' start end ps graph =
+    if start == end then [L.reverse (end:ps)]
+    else
+        let ns' = M.findWithDefault [] start graph
+            ns'' = L.filter (\x -> not (any (== x) ps)) ns'
+            subs = L.foldl (\acc x -> 
+                               let ps' = paths' x end (start:ps) graph 
+                               in (ps' ++ acc)) [] ns''
+        in subs 
+
+paths :: (Ord a) => a -> a -> M.Map a [a] -> [[a]]
+paths start end graph = paths' start end [] graph
