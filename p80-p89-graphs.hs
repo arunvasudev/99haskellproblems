@@ -50,7 +50,7 @@ toHumanFriendly terms =
 -- P80C 
 -- Converts a list of nodes and edges into an adjacency list form
 -- e.g., toGraph ['a','b','c'] [('a','b'), ('a', 'c'), ('c', 'a')]
-toGraph :: [Char] -> [(Char, Char)] -> M.Map Char [Char]
+toGraph :: (Ord a) => [a] -> [(a, a)] -> M.Map a [a]
 toGraph nodes edges =
     let m = L.foldl (\acc x -> M.insert x [] acc) M.empty nodes
         m1 = L.foldl (\acc (s, e) -> 
