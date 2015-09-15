@@ -6,11 +6,14 @@ import Data.Map as M
 -- and its adjacent edges
 data Node a = Node a [a] deriving (Eq, Show)
 
+g1 = "b-c, f-c, g-h, f-b, k-f, h-g"
+
 -- P80A - convert a human friendly string form of
 -- a graph to its equivalent graph term form
+toGraphTerm' :: [[Char]] -> (M.Map Char [Char]) -> M.Map Char [Char]
 toGraphTerm' strs nodes
     = case strs of
-        [] -> M.toList nodes
+        [] -> nodes
         (str:strs') -> 
             case str of
                 (x:[]) ->
@@ -22,6 +25,7 @@ toGraphTerm' strs nodes
                         toGraphTerm' strs' nodes'
                 _ -> error "Invalid component in human friendly string"
 
+toGraphTerm :: String -> M.Map Char [Char]
 toGraphTerm strs 
     = let strs' = S.splitOn "," (L.filter (/= ' ') strs)
           nodes = M.empty in
@@ -42,3 +46,14 @@ toHumanFriendly' terms =
 toHumanFriendly terms =
     let comps = toHumanFriendly' terms in
         L.intercalate "," comps
+
+-- P80C 
+-- Converts a list of nodes and edges into an adjacency list form
+-- e.g., toGraph ['a','b','c'] [('a','b'), ('a', 'c'), ('c', 'a')]
+toGraph :: [Char] -> [(Char, Char)] -> M.Map Char [Char]
+toGraph nodes edges =
+    let m = L.foldl (\acc x -> M.insert x [] acc) M.empty nodes
+        m1 = L.foldl (\acc (s, e) -> 
+                        let ls = M.findWithDefault [] s acc in
+                            M.insert s (e:ls) acc) m edges
+    in m1
