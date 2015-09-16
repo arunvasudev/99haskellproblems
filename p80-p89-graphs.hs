@@ -59,13 +59,14 @@ toGraph nodes edges =
     in m1
 
 -- P81C
--- Returns all the acyclic paths from nodes start to end in a graph
+-- Returns all paths in the given graph starting and 
+-- ending with the nodes, start and end. 
 paths' :: (Ord a) => a -> a -> [a] -> M.Map a [a] -> [[a]]
 paths' start end ps graph =
-    if start == end then [L.reverse (end:ps)]
+    if (start == end) && ((length ps) >= 1) then [L.reverse (end:ps)]
     else
         let ns' = M.findWithDefault [] start graph
-            ns'' = L.filter (\x -> not (any (== x) ps)) ns'
+            ns'' = L.filter (\x -> (x == end) || (not (any (== x) ps))) ns'
             subs = L.foldl (\acc x -> 
                                let ps' = paths' x end (start:ps) graph 
                                in (ps' ++ acc)) [] ns''
@@ -73,3 +74,7 @@ paths' start end ps graph =
 
 paths :: (Ord a) => a -> a -> M.Map a [a] -> [[a]]
 paths start end graph = paths' start end [] graph
+
+-- P82 - find all the loops in a grapg that start and end with the given node
+findCycle :: (Ord a) => a -> M.Map a [a] -> [[a]]
+findCycle start graph = paths' start start [] graph
